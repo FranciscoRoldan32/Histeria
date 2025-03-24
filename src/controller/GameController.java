@@ -30,9 +30,9 @@ public class GameController {
 		mainPanel = new JPanel(cardLayout);
 
 		mainMenu = new MainMenu();
-		gameScreen = new GameScreen(10, 10);
+		gameScreen = new GameScreen(5, 5);
 		scoreScreen = new ScoreScreen();
-		matrixService = new MatrixService(10, 10);
+		matrixService = new MatrixService(5, 5);
 
 		mainPanel.add(mainMenu, "Menu");
 		mainPanel.add(gameScreen, "Juego");
