@@ -9,7 +9,9 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 public class ScoreScreen extends JPanel {
-    private JTextArea scoreArea;
+
+	private static final long serialVersionUID = 1L;
+	private JTextArea scoreArea;
     private JButton btnBack;
 
     public ScoreScreen() {

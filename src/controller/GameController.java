@@ -18,7 +18,6 @@ public class GameController {
 	private MainMenu mainMenu;
 	private GameScreen gameScreen;
 	private ScoreScreen scoreScreen;
-	private ScoreService scoreService;
 	private MatrixService matrixService;
 
 	public GameController() {
@@ -31,10 +30,9 @@ public class GameController {
 		mainPanel = new JPanel(cardLayout);
 
 		mainMenu = new MainMenu();
-		gameScreen = new GameScreen(5, 5);
+		gameScreen = new GameScreen(10, 10);
 		scoreScreen = new ScoreScreen();
-		scoreService = new ScoreService();
-		matrixService = new MatrixService(5, 5);
+		matrixService = new MatrixService(10, 10);
 
 		mainPanel.add(mainMenu, "Menu");
 		mainPanel.add(gameScreen, "Juego");
@@ -54,44 +52,46 @@ public class GameController {
 		}
 		mainMenu.addPlayListener(e -> {
 			matrixService.Init();
-			
+
 			gameScreen.setButtonMatrix(matrixService.getMatrix());
 			cardLayout.show(mainPanel, "Juego");
 
 			JButton[][] buttons = gameScreen.getMatrix();
 
 			for (int i = 0; i < buttons.length; i++) {
-			    for (int j = 0; j < buttons[i].length; j++) {
+				for (int j = 0; j < buttons[i].length; j++) {
 
-			        int buttonId = Integer.parseInt(buttons[i][j].getActionCommand());
+					int buttonId = Integer.parseInt(buttons[i][j].getActionCommand());
 
-			        buttons[i][j].addActionListener(event -> handleButtonClick(buttonId));
-			    }
+					buttons[i][j].addActionListener(event -> handleButtonClick(buttonId));
+				}
 			}
 
 		});
 
 		mainMenu.addScoresListener(e -> {
-			scoreScreen.updateScores(scoreService.getScores());
+			scoreScreen.updateScores(matrixService.getListScore());
 			cardLayout.show(mainPanel, "Puntajes");
 		});
 
 		mainMenu.addExitListener(e -> System.exit(0));
 
 		gameScreen.addBackListener(e -> {
-			scoreService.addScore("Jugador", (int) (Math.random() * 100)); // Simula un puntaje
+			matrixService.resetScore();
+			gameScreen.updateScore(matrixService.getScore());
 			cardLayout.show(mainPanel, "Menu");
 		});
 
 		scoreScreen.addBackListener(e -> cardLayout.show(mainPanel, "Menu"));
 	}
-	
+
 	private void handleButtonClick(int buttonId) {
-	    try {
-	    	gameScreen.updateMatrix(matrixService.getButtonAndAdjancents(buttonId));
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+		try {
+			gameScreen.updateMatrix(matrixService.getButtonAndAdjancents(buttonId));
+			gameScreen.updateScore(matrixService.getScore());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

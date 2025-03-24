@@ -19,6 +19,7 @@ public class MatrixService {
 	private Set<Integer> listAdjacentsAux;
 	private Map<Integer, Button> buttons;
 	private Color colorDefault = new Color(200, 200, 200);
+	private ScoreService _scoreService = new ScoreService();
 
 	private Color[] listColorsDefault = new Color[] { new Color(197, 108, 240), new Color(50, 255, 126),
 			new Color(255, 56, 56), new Color(255, 159, 26), new Color(255, 242, 0), new Color(24, 220, 255) };
@@ -49,6 +50,23 @@ public class MatrixService {
 			System.out.println(e);
 		}
 	}
+	
+	public int getScore() {
+		return _scoreService.getScore();
+	}
+	
+	public List<Score> getListScore(){
+		return _scoreService.getScores();
+	}
+	
+	public void incrementScore() {
+		_scoreService.addPoint();
+	}
+	
+	public void resetScore() {
+		_scoreService.resetScore();
+	}
+	
 
 	public List<Button> getButtonAndAdjancents(int id) throws Exception {
 
@@ -63,7 +81,7 @@ public class MatrixService {
 		for (Integer adj : buttons.get(id).getAdjacents()) {
 			list.add(buttons.get(adj));
 		}
-
+		incrementScore();
 		return list;
 	}
 
