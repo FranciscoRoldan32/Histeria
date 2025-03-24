@@ -6,7 +6,11 @@ import java.awt.event.ActionListener;
 
 public class MainMenu extends JPanel {
 	
-    private JButton btnPlay, btnScores, btnExit;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JButton btnPlay, btnScores, btnExit;
 
     public MainMenu() {
         setLayout(new GridLayout(3, 1));

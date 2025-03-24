@@ -10,8 +10,6 @@ import model.service.MatrixService;
 import model.service.ScoreService;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class GameController {
 	private JFrame frame;
@@ -56,35 +54,21 @@ public class GameController {
 		}
 		mainMenu.addPlayListener(e -> {
 			matrixService.Init();
+			
 			gameScreen.setButtonMatrix(matrixService.getMatrix());
 			cardLayout.show(mainPanel, "Juego");
 
 			JButton[][] buttons = gameScreen.getMatrix();
 
 			for (int i = 0; i < buttons.length; i++) {
-				for (int j = 0; j < buttons.length; j++) {
+			    for (int j = 0; j < buttons[i].length; j++) {
 
-					int rowAux = i;
-					int columnAux = j;
+			        int buttonId = Integer.parseInt(buttons[i][j].getActionCommand());
 
-					buttons[i][j].addActionListener(new ActionListener() {
-
-						@Override
-						public void actionPerformed(ActionEvent e) {
-
-							int buttonId = Integer.parseInt(buttons[rowAux][columnAux].getActionCommand());
-
-							try {
-								matrixService.getButtonAndAdjancents(buttonId);
-
-							} catch (Exception e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-						}
-					});
-				}
+			        buttons[i][j].addActionListener(event -> handleButtonClick(buttonId));
+			    }
 			}
+
 		});
 
 		mainMenu.addScoresListener(e -> {
@@ -101,4 +85,13 @@ public class GameController {
 
 		scoreScreen.addBackListener(e -> cardLayout.show(mainPanel, "Menu"));
 	}
+	
+	private void handleButtonClick(int buttonId) {
+	    try {
+	    	gameScreen.updateMatrix(matrixService.getButtonAndAdjancents(buttonId));
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+
 }

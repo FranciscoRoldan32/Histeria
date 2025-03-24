@@ -18,9 +18,10 @@ public class MatrixService {
 	private int id;
 	private Set<Integer> listAdjacentsAux;
 	private Map<Integer, Button> buttons;
+	private Color colorDefault = new Color(200, 200, 200);
 
-	private Color[] listColorsDefault = new Color[] { Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.ORANGE,
-			Color.CYAN, Color.MAGENTA, Color.PINK };
+	private Color[] listColorsDefault = new Color[] { new Color(197, 108, 240), new Color(50, 255, 126),
+			new Color(255, 56, 56), new Color(255, 159, 26), new Color(255, 242, 0), new Color(24, 220, 255) };
 
 	/**
 	 * @param row
@@ -40,20 +41,7 @@ public class MatrixService {
 		try {
 			createMatrixAndDictionary();
 			AssignAdjacents();
-			
-			//MODO CONSULTA
-			
-			printMatriz();
-			List<Button> list = getButtonAndAdjancents(7);
-			printList(list);
-			Button[][] listAuxButtons = getMatrix();
-			
-			for (int i = 0; i < listAuxButtons.length; i++) {
-				for (int j = 0; j < listAuxButtons.length; j++) {
-					System.out.println(listAuxButtons[j][i]);
-				}
-			}
-			
+
 			resetData();
 
 		} catch (Exception e) {
@@ -61,10 +49,9 @@ public class MatrixService {
 			System.out.println(e);
 		}
 	}
-		
+
 	public List<Button> getButtonAndAdjancents(int id) throws Exception {
 
-		System.out.println("Calcula id: "+id);
 		if (id < 0 || id >= this.buttons.size())
 			throw new Exception("El id no es válido.");
 
@@ -72,16 +59,16 @@ public class MatrixService {
 
 		compareButtonWithAdjacent(buttons.get(id));
 		list.add(buttons.get(id));
-		
+
 		for (Integer adj : buttons.get(id).getAdjacents()) {
 			list.add(buttons.get(adj));
 		}
 
 		return list;
 	}
-	
+
 	public Button[][] getMatrix() {
-		
+
 		Button[][] matrixButtons = new Button[this.row][this.column];
 		Button currentButton = null;
 
@@ -91,15 +78,14 @@ public class MatrixService {
 		}
 		return matrixButtons;
 	}
-	
-	private void createMatrixAndDictionary()
-	{
+
+	private void createMatrixAndDictionary() {
 		for (int i = 0; i < column; i++) {
 			for (int j = 0; j < row; j++) {
 				matrix[j][i] = id;
 
 				Pair par = new Pair(j, i);
-				Button button = new Button(id, colorRandom(), false, par);
+				Button button = new Button(id, colorDefault, par);
 				buttons.put(id, button);
 				this.id++;
 			}
@@ -108,28 +94,23 @@ public class MatrixService {
 
 	private void compareButtonWithAdjacent(Button button) {
 
-		List<Button> list = new ArrayList<>();
-		button.setActive(true);
+		button.setColor(colorRandom());
 
 		for (Integer adj : button.getAdjacents()) {
 
 			Button AdjButton = buttons.get(adj);
 
 			if (button.getColor().equals(AdjButton.getColor())) {
-				button.setActive(false);
-				button.setColor(colorRandom());
+				button.setColor(colorDefault);
 				disabledAdjacents(button);
 			}
-
-			list.add(buttons.get(adj));
 		}
 	}
 
 	private void disabledAdjacents(Button button) {
 		for (Integer adj : button.getAdjacents()) {
 			Button adjButton = buttons.get(adj);
-			adjButton.setActive(false);
-			adjButton.setColor(colorRandom());
+			adjButton.setColor(colorDefault);
 		}
 	}
 
@@ -309,27 +290,6 @@ public class MatrixService {
 		}
 	}
 
-	private void printMatriz() {
-		for (int i = 0; i < column; i++) {
-			for (int j = 0; j < row; j++) {
-				System.out.print("[ID:" + matrix[j][i] + " PAR:(" + j + ":" + i + ")]   ");
-			}
-			System.out.println();
-		}
-	}
-
-	private void printButtons() {
-		for (int i = 0; i < buttons.size(); i++) {
-			System.out.println(buttons.get(i).toString());
-		}
-	}
-
-	private static <T> void printList(List<T> list) {
-		for (T item : list) {
-			System.out.println(item);
-		}
-	}
-
 	private Color colorRandom() {
 
 		int min = 0, max = listColorsDefault.length - 1;
@@ -338,7 +298,7 @@ public class MatrixService {
 		randomNumber = random.nextInt(max - min + 1) + min;
 		return listColorsDefault[randomNumber];
 	}
-	
+
 	private void resetData() {
 		this.id = 0;
 	}
